@@ -1,7 +1,8 @@
 const { app, BrowserWindow } = require('electron');
+const { installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
 // const path = require('path');
 
-function createWindow() {
+function createWindow(isPackaged) {
 	// Create the browser window
 	const win = new BrowserWindow({
 		width: 1200,
@@ -18,15 +19,28 @@ function createWindow() {
 
 	// OR for live web app
 	win.loadURL('https://demmi.moondreams.dev/');
+
+	if (!isPackaged) {
+		win.webContents.openDevTools();
+	}
 }
 
 app.whenReady().then(() => {
-	createWindow();
+	const isPackaged = app.isPackaged;
+	console.log(`App is running in ${isPackaged ? 'production' : 'development'} mode.`);
 
-  // For macOS, re-create a window when the dock icon is clicked and there are no other windows open
-  // Placed within `whenReady` because windows cannot be created before the `ready` event
+	if (!isPackaged) {
+		installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS], { loadExtensionOptions: { allowFileAccess: true } })
+			.then(([redux, react]) => console.log(`Added Extensions:  ${redux.name}, ${react.name}`))
+			.catch((err) => console.log('An error occurred: ', err));
+	}
+
+	createWindow(isPackaged);
+
+	// For macOS, re-create a window when the dock icon is clicked and there are no other windows open
+	// Placed within `whenReady` because windows cannot be created before the `ready` event
 	app.on('activate', () => {
-		if (BrowserWindow.getAllWindows().length === 0) createWindow();
+		if (BrowserWindow.getAllWindows().length === 0) createWindow(isPackaged);
 	});
 });
 
