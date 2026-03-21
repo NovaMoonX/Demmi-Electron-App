@@ -1,8 +1,9 @@
 const recipe = require('./handlers/recipe');
+const webpage = require('./handlers/webpage');
 
 // Add new handler modules here as the app grows.
 // Each module must export a `register(ipcMain)` function.
-const handlers = [recipe];
+const handlers = [webpage, recipe];
 
 /**
  * Register all IPC handlers with the provided ipcMain instance.
