@@ -18,7 +18,8 @@ function createWindow(isPackaged) {
 	// win.loadFile(path.join(__dirname, 'dist/index.html'));
 
 	// OR for live web app
-	win.loadURL('https://demmi.moondreams.dev/');
+	win.loadURL('http://localhost:5173/');
+	// win.loadURL('https://demmi.moondreams.dev/');
 
 	if (!isPackaged) {
 		win.webContents.openDevTools();
