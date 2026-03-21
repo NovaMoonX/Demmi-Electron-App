@@ -1,6 +1,9 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
-// const path = require('path');
+const path = require('path');
+const { registerIpcHandlers } = require('./ipc');
+
+registerIpcHandlers(ipcMain);
 
 function createWindow(isPackaged) {
 	// Create the browser window
@@ -10,6 +13,7 @@ function createWindow(isPackaged) {
 		webPreferences: {
 			nodeIntegration: false, // set to true only if you need Node.js in your frontend
 			contextIsolation: true, // recommended for security
+			preload: path.join(__dirname, 'preload.js'),
 		},
 	});
 
